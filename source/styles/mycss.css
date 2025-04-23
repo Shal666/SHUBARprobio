@@ -214,6 +214,7 @@ header {
     background: linear-gradient(135deg, #e6f4ea 0%, #ffffff 100%);
 }
 
+
 .hero-content {
     display: flex;
     align-items: center;
@@ -309,6 +310,50 @@ header {
 .product-description p {
     margin-bottom: 15px;
     color: #666;
+}
+
+/* Стили для блока с верблюдами */
+.camel-tradition {
+    margin: 30px 0;
+    text-align: center;
+    position: relative;
+}
+
+.camel-tradition img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(42, 127, 98, 0.15);
+    transition: all 0.4s ease;
+}
+
+.camel-tradition img:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(42, 127, 98, 0.2);
+}
+
+/* Декоративный элемент для красоты */
+.camel-tradition::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #2a7f62, transparent);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+    .camel-tradition {
+        margin: 20px 0;
+    }
+    
+    .camel-tradition img {
+        border-radius: 8px;
+    }
 }
 
 .product-composition {
