@@ -29,6 +29,7 @@
                         <a href="#benefits">Преимущества</a>
                         <a href="#usage">Применение</a>
                         <a href="#delivery">Доставка</a>
+                        <a href="#products">Продукция</a> 
                         <a href="#contacts">Контакты</a>
                     </nav>
                 </div>
@@ -51,6 +52,7 @@
                 <a href="#benefits">Преимущества</a>
                 <a href="#usage">Применение</a>
                 <a href="#delivery">Доставка</a>
+                <a href="#products">Продукция</a> 
                 <a href="#contacts">Контакты</a>
                 <div class="mobile-phone">
                     <i class="fas fa-phone"></i> +7 708 708 80 88
@@ -224,6 +226,118 @@
         </div>
     </section>
 
+    
+    <h1 class="product-title">Наша продукция</h1>
+    <section id="products" class="product-list">
+        <div class="product-card">
+            <img src="./source/images/product1.jpg" alt="ФКардиПро">
+            <h3>КардиПро</h3>
+            <p class="description">Специально разработан для поддержания здоровья сердца. Улучшает кровообращение, укрепляет сосуды и снижает риск сердечно-сосудистых заболеваний.
+
+            </p>
+            <p class="price">1500 ₸</p>
+            <button onclick="addToCart(1)">Добавить в корзину</button>
+        </div>
+        
+        <div class="product-card">
+            <img src="./source/images/product2.jpg" alt="Гриппостоп">
+            <h3>Гриппостоп</h3>
+            <p class="description">Эффективное средство для лечения гриппа и ОРВИ. Обладает жаропонижающим, противовирусным и болеутоляющим действием.</p>
+            <p class="price">2000 ₸</p>
+            <button onclick="addToCart(2)">Добавить в корзину</button>
+        </div>
+        
+        <div class="product-card">
+            <img src="./source/images/product3.jpg" alt="ДермоКрем">
+            <h3>ДермоКрем</h3>
+            <p class="description">Успокаивающий крем для лечения раздражений кожи, экзем и аллергических реакций. Восстанавливает барьерные функции кожи, предотвращая воспаления.</p>
+            <p class="price">3500 ₸</p>
+            <button onclick="addToCart(3)">Добавить в корзину</button>
+        </div>
+        
+        <div class="product-card">
+            <img src="./source/images/product4.jpg" alt="ИммуноФорте">
+            <h3>ИммуноФорте</h3>
+            <p class="description">Комплекс витаминов и минералов для укрепления иммунной системы. Повышает сопротивляемость организма к инфекциям.</p>
+            <p class="price">1800 ₸</p>
+            <button onclick="addToCart(4)">Добавить в корзину</button>
+        </div>
+        
+        <div class="product-card">
+            <img src="./source/images/product5.jpg" alt="АльгоТаб">
+            <h3>АльгоТаб</h3>
+            <p class="description">Препарат для быстрого облегчения боли. Подходит для лечения головной, зубной и мышечной боли, а также при болях в суставах.</p>
+            <p class="price">1300 ₸</p>
+            <button onclick="addToCart(5)">Добавить в корзину</button>
+        </div>
+
+        <div class="product-card">
+            <img src="./source/images/product6.jpg" alt="ЛюксВита">
+            <h3>ЛюксВита</h3>
+            <p class="description">Биологически активная добавка для улучшения работы печени. Помогает восстановить клетки печени, улучшает обмен веществ и поддерживает нормальный уровень холестерина.</p>
+            <p class="price">1300 ₸</p>
+            <button onclick="addToCart(6)">Добавить в корзину</button>
+        </div>
+
+    </section>
+    <div class="cart-floating">
+        <button class="cart-btn" onclick="openCart()">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-text">Корзина</span>
+            <span class="cart-count">0</span>
+        </button>
+    </div>
+    
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-modal-content">
+            <div class="cart-header">
+                <h2>Ваша корзина</h2>
+                <button class="close-cart" onclick="closeCart()">&times;</button>
+            </div>
+            <div class="cart-items" id="cart-items">
+                <!-- Товары будут здесь -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Итого:</span>
+                    <span id="total-price">0 ₸</span>
+                </div>
+                <button class="checkout-btn" onclick="checkout()">Оформить заказ</button>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <!-- Форма для оформления заказа -->
+    <div class="order-modal" id="orderModal">
+        <div class="order-modal-content">
+            <div class="order-header">
+                <h2>Оформление заказа</h2>
+                <button class="close-order" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <form id="orderForm" class="order-form">
+                <div class="form-group">
+                    <label for="clientName">Ваше имя*</label>
+                    <input type="text" id="clientName" required>
+                </div>
+                <div class="form-group">
+                    <label for="clientPhone">Телефон*</label>
+                    <input type="tel" id="clientPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="clientAddress">Адрес доставки</label>
+                    <input type="text" id="clientAddress">
+                </div>
+                <div class="form-group">
+                    <label for="clientComment">Комментарий к заказу</label>
+                    <textarea id="clientComment" rows="3"></textarea>
+                </div>
+                <button type="submit" class="submit-order-btn">Отправить заказ</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Контакты -->
     <section id="contacts" class="contacts">
         <div class="container">
@@ -299,6 +413,8 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
 <script src="./script.js"></script>
+<script src="./cart.js"></script>
+<script src="./order.js"></script>
 </body>
 
 </html>
