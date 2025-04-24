@@ -8,24 +8,15 @@ const CHAT_ID = '658759796';
 // Устанавливаем +7 в поле номера телефона по умолчанию
 document.getElementById('clientPhone').value = '+7';
 
-// Добавляем обработчик событий для телефонного поля, чтобы не было возможности стереть +7 и ввести больше 10 цифр
+// Добавляем обработчик событий для телефонного поля
 document.getElementById('clientPhone').addEventListener('input', function(e) {
-    // Удаляем всё кроме цифр
     let digits = this.value.replace(/\D/g, '');
-
-    // Удаляем первую 7, если она есть (так как мы её добавим отдельно)
-    if (digits.startsWith('7')) {
-        digits = digits.slice(1);
-    }
-
-    // Ограничиваем до 10 цифр после +7
+    if (digits.startsWith('7')) digits = digits.slice(1);
     digits = digits.slice(0, 10);
-
-    // Обновляем значение с префиксом +7
     this.value = '+7' + digits;
 });
 
-// Настройка placeholder и цвет текста для полей с подсказками
+// Настройка placeholder и цвет текста
 function setupField(fieldId, placeholderText) {
     const field = document.getElementById(fieldId);
     field.placeholder = placeholderText;
@@ -46,11 +37,11 @@ function setupField(fieldId, placeholderText) {
     });
 }
 
-// Инициализация всех полей с подсказками
+// Инициализация подсказок
 setupField('clientName', 'Иван Иванович');
 setupField('clientAddress', 'Город, Улица, № дома, Квартира');
 
-// Открытие модального окна заказа
+// Открытие модального окна
 function checkout() {
     if (cart.length === 0) {
         showNotification('Корзина пуста!');
@@ -60,7 +51,7 @@ function checkout() {
     document.body.style.overflow = 'hidden';
 }
 
-// Закрытие модального окна заказа
+// Закрытие модального окна
 function closeOrderModal() {
     document.getElementById('orderModal').style.display = 'none';
     document.body.style.overflow = 'auto';
@@ -68,7 +59,7 @@ function closeOrderModal() {
 
 // Отправка заказа в Telegram
 async function sendOrderToTelegram(orderData) {
-    const itemsText = cart.map(item => 
+    const itemsText = cart.map(item =>
         `▫ ${item.name} - ${item.quantity || 1} × ${item.price} ₸`
     ).join('\n');
 
@@ -91,7 +82,6 @@ ${itemsText}
     try {
         await fetch(url);
         showNotification('Заказ отправлен! Мы с вами свяжемся.');
-
         cart = [];
         saveCart();
         updateCartUI();
@@ -107,19 +97,49 @@ ${itemsText}
 document.getElementById('orderForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const name = document.getElementById('clientName').value.trim();
-    const phone = document.getElementById('clientPhone').value.trim();
-    const address = document.getElementById('clientAddress').value.trim();
+    const nameField = document.getElementById('clientName');
+    const phoneField = document.getElementById('clientPhone');
+    const addressField = document.getElementById('clientAddress');
     const comment = document.getElementById('clientComment').value.trim();
+
+    const name = nameField.value.trim();
+    const phone = phoneField.value.trim();
+    const address = addressField.value.trim();
+
+    // Функция сброса стилей
+    [nameField, phoneField, addressField].forEach(f => f.style.border = '');
 
     if (name === '' || phone === '') {
         showNotification('Пожалуйста, заполните имя и номер телефона!');
+        if (name === '') {
+            nameField.style.border = '2px solid red';
+            nameField.focus();
+        } else {
+            phoneField.style.border = '2px solid red';
+            phoneField.focus();
+        }
+        return;
+    }
+
+    if (name.length < 3) {
+        showNotification('Введите полное имя ');
+        nameField.style.border = '2px solid red';
+        nameField.focus();
+        return;
+    }
+
+    if (address.length > 0 && address.length < 5) {
+        showNotification('Введите корректный адрес ');
+        addressField.style.border = '2px solid red';
+        addressField.focus();
         return;
     }
 
     const phonePattern = /^\+7\d{10}$/;
     if (!phonePattern.test(phone)) {
         showNotification('Введите корректный номер телефона в формате +7XXXXXXXXXX');
+        phoneField.style.border = '2px solid red';
+        phoneField.focus();
         return;
     }
 
@@ -133,14 +153,14 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     sendOrderToTelegram(orderData);
 });
 
-// Закрытие при клике вне области
+// Закрытие модального окна по клику вне области
 document.getElementById('orderModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeOrderModal();
     }
 });
 
-// Функция для показа уведомлений
+// Показ уведомлений
 function showNotification(message) {
     const notif = document.createElement('div');
     notif.textContent = message;
