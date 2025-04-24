@@ -8,40 +8,47 @@ const CHAT_ID = '658759796';
 // Устанавливаем +7 в поле номера телефона по умолчанию
 document.getElementById('clientPhone').value = '+7';
 
-// Добавляем обработчик событий для телефонного поля, чтобы не было возможности стереть +7
+// Добавляем обработчик событий для телефонного поля, чтобы не было возможности стереть +7 и ввести больше 10 цифр
 document.getElementById('clientPhone').addEventListener('input', function(e) {
-    if (this.value.startsWith('+7') && this.selectionStart === 2) {
-        return; // Если пользователь не пытается удалить +7, не делать ничего
+    // Удаляем всё кроме цифр
+    let digits = this.value.replace(/\D/g, '');
+
+    // Удаляем первую 7, если она есть (так как мы её добавим отдельно)
+    if (digits.startsWith('7')) {
+        digits = digits.slice(1);
     }
-    if (this.value.length > 0 && !this.value.startsWith('+7')) {
-        this.value = '+7' + this.value.replace(/^\+7/, ''); // Добавляем +7, если оно отсутствует
-    }
+
+    // Ограничиваем до 10 цифр после +7
+    digits = digits.slice(0, 10);
+
+    // Обновляем значение с префиксом +7
+    this.value = '+7' + digits;
 });
 
 // Настройка placeholder и цвет текста для полей с подсказками
 function setupField(fieldId, placeholderText) {
     const field = document.getElementById(fieldId);
     field.placeholder = placeholderText;
-    field.style.color = '#999'; // Цвет текста подсказки
+    field.style.color = '#999';
 
     field.addEventListener('focus', function() {
         if (this.value === placeholderText) {
-            this.value = ''; // Очищаем поле при фокусе, если это placeholder
-            this.style.color = '#000'; // Цвет текста при вводе
+            this.value = '';
+            this.style.color = '#000';
         }
     });
 
     field.addEventListener('blur', function() {
         if (this.value === '') {
-            this.value = placeholderText; // Восстанавливаем placeholder, если поле пустое
-            this.style.color = '#999'; // Цвет подсказки
+            this.value = placeholderText;
+            this.style.color = '#999';
         }
     });
 }
 
 // Инициализация всех полей с подсказками
-setupField('clientName', 'Иван Иванович'); // Имя клиента
-setupField('clientAddress', 'Город, Улица, № дома, Квартира'); // Адрес клиента
+setupField('clientName', 'Иван Иванович');
+setupField('clientAddress', 'Город, Улица, № дома, Квартира');
 
 // Открытие модального окна заказа
 function checkout() {
@@ -64,11 +71,11 @@ async function sendOrderToTelegram(orderData) {
     const itemsText = cart.map(item => 
         `▫ ${item.name} - ${item.quantity || 1} × ${item.price} ₸`
     ).join('\n');
-    
+
     const total = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
-    
+
     const text = `📦 *Новый заказ!*
-    
+
 👤 *Клиент:* ${orderData.name}
 📞 *Телефон:* ${orderData.phone}
 🏠 *Адрес:* ${orderData.address || 'Не указан'}
@@ -80,7 +87,7 @@ ${itemsText}
 💰 *Итого:* ${total} ₸`;
 
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}&parse_mode=Markdown`;
-    
+
     try {
         await fetch(url);
         showNotification('Заказ отправлен! Мы с вами свяжемся.');
@@ -110,7 +117,6 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
         return;
     }
 
-    // Валидация номера телефона на +7 и 11 цифр
     const phonePattern = /^\+7\d{10}$/;
     if (!phonePattern.test(phone)) {
         showNotification('Введите корректный номер телефона в формате +7XXXXXXXXXX');
